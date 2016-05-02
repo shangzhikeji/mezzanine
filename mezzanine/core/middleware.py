@@ -10,6 +10,7 @@ from django.http import (HttpResponse, HttpResponseRedirect,
                          HttpResponsePermanentRedirect, HttpResponseGone)
 from django.middleware.csrf import CsrfViewMiddleware, get_token
 from django.template import Template, RequestContext
+from django.utils import six
 from django.utils.cache import get_max_age
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -79,29 +80,36 @@ class SitePermissionMiddleware(object):
         request.user.has_site_permission = has_site_permission
 
 
-class TemplateForDeviceMiddleware(object):
+class TemplateTransformMiddleware(object):
+    def process_template_response(self, request, response):
+        """
+        Transform the template_name of a TemplateResponse, if it's a string,
+        list or tuple. Otherwise it'll be a Template object returned by a
+        backend, and we don't want to touch those.
+        """
+        if hasattr(response, "template_name"):
+            if isinstance(response.template_name, six.string_types + (list, tuple)):
+                response.template_name = self._transform_templates(request, response.template_name)
+        return response
+
+    def _transform_templates(self, request, template_name):
+        raise NotImplementedError
+
+
+class TemplateForDeviceMiddleware(TemplateTransformMiddleware):
     """
     Inserts device-specific templates to the template list.
     """
-    def process_template_response(self, request, response):
-        if hasattr(response, "template_name"):
-            if not isinstance(response.template_name, Template):
-                templates = templates_for_device(request,
-                    response.template_name)
-                response.template_name = templates
-        return response
+    def _transform_templates(self, request, template_name):
+        return templates_for_device(request, template_name)
 
 
-class TemplateForHostMiddleware(object):
+class TemplateForHostMiddleware(TemplateTransformMiddleware):
     """
     Inserts host-specific templates to the template list.
     """
-    def process_template_response(self, request, response):
-        if hasattr(response, "template_name"):
-            if not isinstance(response.template_name, Template):
-                response.template_name = templates_for_host(
-                    response.template_name)
-        return response
+    def _transform_templates(self, request, template_name):
+        return templates_for_host(template_name)
 
 
 class UpdateCacheMiddleware(object):
