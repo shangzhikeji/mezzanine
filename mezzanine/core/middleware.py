@@ -135,7 +135,7 @@ class UpdateCacheMiddleware(object):
             timeout = settings.CACHE_MIDDLEWARE_SECONDS
         if anon and valid_status and marked_for_update and timeout:
             cache_key = cache_key_prefix(request) + request.get_full_path()
-            _cache_set = lambda r: cache_set(cache_key, r.content, timeout)
+            _cache_set = lambda r: cache_set(cache_key, r, timeout)
             if callable(getattr(response, "render", None)):
                 response.add_post_render_callback(_cache_set)
             else:
@@ -199,7 +199,7 @@ class FetchFromCacheMiddleware(object):
             if response is None:
                 request._update_cache = True
             else:
-                return HttpResponse(response)
+                return response
 
 
 class SSLRedirectMiddleware(object):
