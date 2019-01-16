@@ -154,11 +154,11 @@ class SearchableQuerySet(QuerySet):
         # ### BUILD QUERYSET FILTER ###
 
         # Create the queryset combining each set of terms.
-        excluded = [reduce(iand, [~Q(**{"%s__icontains" % f: t[1:]}) for f in
+        excluded = [reduce(iand, [~Q(**{"%s__contains" % f: t[1:]}) for f in
             self._search_fields.keys()]) for t in terms if t[0:1] == "-"]
-        required = [reduce(ior, [Q(**{"%s__icontains" % f: t[1:]}) for f in
+        required = [reduce(ior, [Q(**{"%s__contains" % f: t[1:]}) for f in
             self._search_fields.keys()]) for t in terms if t[0:1] == "+"]
-        optional = [reduce(ior, [Q(**{"%s__icontains" % f: t}) for f in
+        optional = [reduce(ior, [Q(**{"%s__contains" % f: t}) for f in
             self._search_fields.keys()]) for t in terms if t[0:1] not in "+-"]
         queryset = self
         if excluded:
