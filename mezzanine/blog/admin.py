@@ -19,9 +19,9 @@ if settings.BLOG_USE_FEATURED_IMAGE:
     blogpost_fieldsets[0][1]["fields"].insert(-2, "featured_image")
     blogpost_list_display.insert(0, "admin_thumb")
 blogpost_fieldsets = list(blogpost_fieldsets)
-blogpost_fieldsets.insert(1, (_("Other posts"), {
-    "classes": ("collapse-closed",),
-    "fields": ("related_posts",)}))
+#blogpost_fieldsets.insert(1, (_("Other posts"), {
+#    "classes": ("collapse-closed",),
+#    "fields": ("related_posts",)}))
 blogpost_list_filter = deepcopy(DisplayableAdmin.list_filter) + ("categories",)
 
 
