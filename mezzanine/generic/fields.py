@@ -203,7 +203,7 @@ class KeywordsField(BaseGenericRelation):
             data = [related_manager.create(keyword_id=i) for i in new_ids]
         # Remove keywords that are no longer assigned to anything.
         Keyword.objects.delete_unused(removed_ids)
-        super(KeywordsField, self).save_form_data(instance, data)
+        #super(KeywordsField, self).save_form_data(instance, data)
 
     def contribute_to_class(self, cls, name):
         """
