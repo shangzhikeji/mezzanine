@@ -53,7 +53,7 @@ try:
             "django-contrib-comments",
             "django >= 1.11, < 2.1",
             "filebrowser_safe >= 0.5.0",
-            "grappelli_safe >= 0.5.0",
+            "git+https://github.com/shangzhikeji/filebrowser-safe.git",
             "tzlocal >= 1.0",
             "bleach >= 2.0",
             "beautifulsoup4 >= 4.5.3",
