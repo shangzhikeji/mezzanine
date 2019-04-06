@@ -64,7 +64,7 @@ try:
             "chardet",
         ],
         dependency_links=[
-            "git+https://github.com/shangzhikeji/filebrowser-safe.git",
+            "https://github.com/shangzhikeji/filebrowser-safe.git",
         ],
         entry_points="""
             [console_scripts]
