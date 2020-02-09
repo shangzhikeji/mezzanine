@@ -28,7 +28,7 @@ def blog_post_list(request, tag=None, year=None, month=None, username=None,
     category slug or author's username if given.
     """
     templates = []
-    blog_posts = BlogPost.objects.published(for_user=request.user)
+    blog_posts = BlogPost.objects.published(for_user=request.user).defer("content")
     if tag is not None:
         tag = get_object_or_404(Keyword, slug=tag)
         blog_posts = blog_posts.filter(keywords__keyword=tag)
