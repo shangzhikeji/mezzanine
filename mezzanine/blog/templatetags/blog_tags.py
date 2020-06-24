@@ -20,16 +20,17 @@ def blog_months(*args):
     """
     Put a list of dates for blog posts into the template context.
     """
-    dates = BlogPost.objects.published().values_list("publish_date", flat=True)
-    tz = timezone.get_current_timezone()
-    dates = [d.astimezone(tz) for d in dates]
-    date_dicts = [{"date": datetime(d.year, d.month, 1)} for d in dates]
+    # dates = BlogPost.objects.published().values_list("publish_date", flat=True)
+    # tz = timezone.get_current_timezone()
+    # dates = [d.astimezone(tz) for d in dates]
+    # date_dicts = [{"date": datetime(d.year, d.month, 1)} for d in dates]
+    # month_dicts = []
+    # for date_dict in date_dicts:
+    #     if date_dict not in month_dicts:
+    #         month_dicts.append(date_dict)
+    # for date_dict in month_dicts:
+    #     date_dict["post_count"] = date_dicts.count(date_dict)
     month_dicts = []
-    for date_dict in date_dicts:
-        if date_dict not in month_dicts:
-            month_dicts.append(date_dict)
-    for date_dict in month_dicts:
-        date_dict["post_count"] = date_dicts.count(date_dict)
     return month_dicts
 
 
@@ -38,9 +39,11 @@ def blog_categories(*args):
     """
     Put a list of categories for blog posts into the template context.
     """
-    posts = BlogPost.objects.published()
-    categories = BlogCategory.objects.filter(blogposts__in=posts)
-    return list(categories.annotate(post_count=Count("blogposts")))
+    #posts = BlogPost.objects.published()
+    #categories = BlogCategory.objects.filter(blogposts__in=posts)
+    #return list(categories.annotate(post_count=Count("blogposts")))
+    categories = BlogCategory.objects.all()
+    return categories
 
 
 @register.as_tag

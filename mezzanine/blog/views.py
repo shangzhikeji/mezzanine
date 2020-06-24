@@ -27,6 +27,7 @@ def blog_post_list(request, tag=None, year=None, month=None, username=None,
     ``blog/blog_post_list_XXX.html`` where ``XXX`` is either the
     category slug or author's username if given.
     """
+    print("--------------")
     templates = []
     blog_posts = BlogPost.objects.published(for_user=request.user).defer("content")
     if tag is not None:

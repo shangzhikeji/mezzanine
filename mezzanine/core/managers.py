@@ -357,6 +357,7 @@ class SearchableManager(Manager):
         for model in models:
             try:
                 queryset = model.objects.published(for_user=user)
+                
             except AttributeError:
                 queryset = model.objects.get_queryset()
             all_results.extend(
