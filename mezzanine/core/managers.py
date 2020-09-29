@@ -416,3 +416,24 @@ class DisplayableManager(CurrentSiteManager, PublishedManager,
                                   .exclude(slug__startswith="https://")):
                     items[item.get_absolute_url()] = item
         return items
+
+    def onepage_url_map(self, pageNo, for_user=None,**kwargs):
+        """
+        Returns a dictionary of urls mapped to Displayable subclass
+        instances, including a fake homepage instance if none exists.
+        Used in ``mezzanine.core.sitemaps``.
+        """
+        class Home:
+            title = _("Home")
+        home = Home()
+        setattr(home, "get_absolute_url", home_slug)
+        items = {home.get_absolute_url(): home}
+        for model in apps.get_models():
+            
+            if issubclass(model, self.model):
+                for item in (model.objects.published(for_user=for_user)
+                                  .filter(**kwargs)
+                                  .exclude(slug__startswith="http://")
+                                  .exclude(slug__startswith="https://")[10000*pageNo:10000*pageNo+10000]):
+                    items[item.get_absolute_url()] = item
+        return items

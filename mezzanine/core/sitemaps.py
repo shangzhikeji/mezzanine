@@ -18,13 +18,24 @@ class DisplayableSitemap(Sitemap):
     Sitemap class for Django's sitemaps framework that returns
     all published items for models that subclass ``Displayable``.
     """
+    pageNo=0
+    
+    def __init__(self,pageNo):
+        self.pageNo = pageNo
 
     def items(self):
         """
         Return all published items for models that subclass
         ``Displayable``, excluding those that point to external sites.
         """
-        return list(Displayable.objects.url_map(in_sitemap=True).values())
+        return list(Displayable.objects.onepage_url_map(self.pageNo, in_sitemap=True).values())
+
+    def onepage_items(self):
+        """
+        Return all published items for models that subclass
+        ``Displayable``, excluding those that point to external sites.
+        """
+        return list(Displayable.objects.onepage_url_map(self.pageNo, in_sitemap=True).values())
 
     def lastmod(self, obj):
         if blog_installed and isinstance(obj, BlogPost):
